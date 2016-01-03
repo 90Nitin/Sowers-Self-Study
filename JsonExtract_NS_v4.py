@@ -81,7 +81,7 @@ for i in range(0,json_data.__len__()):
     else:
         temp.append(json_data[0]['worker'])
         temp.append(0.0)
-        temp.append(5)
+        temp.append(json_data[0]['time'])
     worker_data.append(temp)
 
 for k,g in groupby(worker_data,lambda x:x[0]):
@@ -102,8 +102,3 @@ print("Worker Speed Summary data")
 print("######################################################################")
 print(worker_smmry)
 print("###################################################################### \n")
-
-
-
-
-
