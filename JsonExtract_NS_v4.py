@@ -46,9 +46,9 @@ json_data = json.load(file)
 worker_data = []
 worker_smmry = []
 
-# Remove this when done
-print("UNsorted JSON data \n")
-print("###################################################################### \n")
+# Printing the unsorted Dataset
+print("UNsorted JSON data")
+print("######################################################################")
 print(json_data)
 print("###################################################################### \n")
 
@@ -60,44 +60,46 @@ print("Num Obs -> ",json_data.__len__())
 
 # 3. Grouping on Workers
 json_data = sorted(json_data,key=itemgetter('worker','time'))
-print("sorted JSON data \n")
-print("###################################################################### \n")
+print("sorted JSON data")
+print("######################################################################")
 print(json_data)
 print("###################################################################### \n")
 
-for i in  range(0,json_data.__len__()):
+for i in range(0,json_data.__len__()):
     temp = []
     if (i>0):
         if (json_data[i]['worker']==json_data[i-1]['worker']):
             temp.append(json_data[i]['worker'])
-            temp.append(hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng']))
+            delDist = (hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng'])>10**-5)*1
+            delDist = delDist*hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng'])
+            temp.append(delDist)
             temp.append(json_data[i]['time'])
         else:
             temp.append(json_data[i]['worker'])
-            temp.append(hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng']))
+            temp.append(0.01)
             temp.append(json_data[i]['time'])
     else:
         temp.append(1)
-        temp.append(hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng']))
+        temp.append(0.02)
         temp.append(5)
     worker_data.append(temp)
 
 for k,g in groupby(worker_data,lambda x:x[0]):
     g = numpy.array(list(g))
-    g = sum(g[:,1])/(numpy.count_nonzero(g[:,1])+1)
+    g = sum(g[:,1])/(numpy.count_nonzero(g[:,1]))
     temp = []
     temp.append(k)
     temp.append(g)
     worker_smmry.append(temp)
 
-print("Worker Data \n")
-print("###################################################################### \n")
+print("Worker Data")
+print("######################################################################")
 print(worker_data)
 print("###################################################################### \n")
 
 worker_smmry = sorted(worker_smmry,key=itemgetter(1))
-print("Worker Speed Summary data \n")
-print("###################################################################### \n")
+print("Worker Speed Summary data")
+print("######################################################################")
 print(worker_smmry)
 print("###################################################################### \n")
 
