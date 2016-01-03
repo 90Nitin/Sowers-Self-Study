@@ -76,11 +76,11 @@ for i in range(0,json_data.__len__()):
             temp.append(json_data[i]['time'])
         else:
             temp.append(json_data[i]['worker'])
-            temp.append(0.01)
+            temp.append(0.0)
             temp.append(json_data[i]['time'])
     else:
         temp.append(1)
-        temp.append(0.02)
+        temp.append(0.0)
         temp.append(5)
     worker_data.append(temp)
 
