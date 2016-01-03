@@ -30,6 +30,16 @@ def hvsne(unit,inLat,inLng,finLat,finLng):
         dist = dist * 0.8684
     return(dist)
 
+'''
+print("Distance between BOMB KAR ->",hvsne("K",19.075984,72.877656,24.829535,67.084811))
+print("Distance between BOMB Del ->",hvsne("K",19.075984,72.877656,28.613939,77.209021))
+print("Distance between BOMB chi ->",hvsne("K",19.075984,72.877656,41.878114,-87.629798))
+print("Distance between BOMB shanghai ->",hvsne("K",19.075984,72.877656,30.866557,121.285823))
+print("Distance between BOMB tokyo ->",hvsne("K",19.075984,72.877656,35.689487,139.691706))
+print("Distance between BOMB london ->",hvsne("K",19.075984,72.877656,51.507351,-0.127758))
+print("Distance between BOMB sao paolo ->",hvsne("K",19.075984,72.877656,-23.550520,-46.633309))
+'''
+
 file = open('data.txt',mode='r')
 json_data = json.load(file)
 worker_data = []
