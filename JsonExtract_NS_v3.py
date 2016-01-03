@@ -31,6 +31,7 @@ def hvsne(unit,inLat,inLng,finLat,finLng):
     return(dist)
 
 '''
+QC Done - works well!
 print("Distance between BOMB KAR ->",hvsne("K",19.075984,72.877656,24.829535,67.084811))
 print("Distance between BOMB Del ->",hvsne("K",19.075984,72.877656,28.613939,77.209021))
 print("Distance between BOMB chi ->",hvsne("K",19.075984,72.877656,41.878114,-87.629798))
