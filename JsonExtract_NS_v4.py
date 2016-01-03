@@ -41,22 +41,22 @@ print("Distance between BOMB london ->",hvsne("K",19.075984,72.877656,51.507351,
 print("Distance between BOMB sao paolo ->",hvsne("K",19.075984,72.877656,-23.550520,-46.633309))
 '''
 
-file = open('data.txt',mode='r')
+file = open('data_2015-12-31.txt',mode='r')
 json_data = json.load(file)
 worker_data = []
 worker_smmry = []
 
 # Printing the unsorted Dataset
-print("UNsorted JSON data")
-print("######################################################################")
-print(json_data)
-print("###################################################################### \n")
+# print("UNsorted JSON data")
+# print("######################################################################")
+# print(json_data)
+# print("###################################################################### \n")
 
 # 1. Data type formed after de-serializing JSON
-print("Data Type -> ",str(type(json_data)))
+# print("Data Type -> ",str(type(json_data)))
 
 # 2. Number of Rows in the DataSet(DS)
-print("Num Obs -> ",json_data.__len__())
+# print("Num Obs -> ",json_data.__len__())
 
 # 3. Grouping on Workers
 json_data = sorted(json_data,key=itemgetter('worker','time'))
@@ -70,7 +70,7 @@ for i in range(0,json_data.__len__()):
     if (i>0):
         if (json_data[i]['worker']==json_data[i-1]['worker']):
             temp.append(json_data[i]['worker'])
-            delDist = (hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng'])>10**-5)*1
+            delDist = (hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng'])>10**-4)*1
             delDist = delDist*hvsne("K",json_data[i-1]['lat'],json_data[i-1]['lng'],json_data[i]['lat'],json_data[i]['lng'])
             temp.append(delDist)
             temp.append(json_data[i]['time'])
@@ -79,14 +79,14 @@ for i in range(0,json_data.__len__()):
             temp.append(0.0)
             temp.append(json_data[i]['time'])
     else:
-        temp.append(1)
+        temp.append(json_data[0]['worker'])
         temp.append(0.0)
         temp.append(5)
     worker_data.append(temp)
 
 for k,g in groupby(worker_data,lambda x:x[0]):
     g = numpy.array(list(g))
-    g = sum(g[:,1])/(numpy.count_nonzero(g[:,1]))
+    g = sum(g[:,1])/max(numpy.count_nonzero(g[:,1]),1)
     temp = []
     temp.append(k)
     temp.append(g)
