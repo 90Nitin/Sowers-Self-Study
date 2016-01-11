@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Labor Simulation</title>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&libraries=geometry"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src='http://www.jqueryscript.net/demo/Simple-jQuery-Based-Barcode-Generator-Barcode/jquery-barcode.js'></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=&signed_in=true"></script>-->
+    <style>
+      html, body {
+        height: 100%;
+        width:100%;
+        margin: 2% auto;
+        padding: 0;
+      }
+      #map {        
+        width:90%;
+        margin: 2% auto;
+        padding: 0;
+        height: 90%;
+      }
+    </style>
+  </head>
+  <body>
+<div class="container" style="width:30%">
+
+      <div style="text-align:center">
+            <h3>Labor Simulation Strawberry Harvesting</h3>
+      <button class="btn btn-primary" onclick="startTimer()" type="button">Restart</button>
+  </div>
+</div>
+    <div id="map"></div>
+    <script>
+
+// This example creates a 2-pixel-wide red polyline showing the path of William
+// Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
+// Brisbane, Australia.
+
+
+var process=function(beginPoint,endPoint,transitTime) {
+  var beginPoint=JSON.parse(JSON.stringify(beginPoint));
+  var endPoint=JSON.parse(JSON.stringify(endPoint));
+  var dPoint={lat:endPoint.lat-beginPoint.lat,lng:endPoint.lng-beginPoint.lng};
+  var transitTime=transitTime; //transitTime, in minutes
+  this.pathTrack = new google.maps.Polyline({
+    path: null,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2,
+    map:map,
+  });
+  this.currentPosition=beginPoint;
+  this.update=function(time,sdAlong,GPSsd) {
+    sdAlong = sdAlong || 0;
+    GPSsd = GPSsd || 0;
+    //time is in minutes
+    time+=(Math.random()-0.5)*sdAlong
+    time=Math.min(time,transitTime);
+    time=Math.max(time,0);
+    this.currentPosition={lat:beginPoint.lat+(time/transitTime)*dPoint.lat,lng:beginPoint.lng+(time/transitTime)*dPoint.lng};
+    this.currentPosition.lat+=(Math.random()-0.5)*GPSsd;
+    this.currentPosition.lng+=(Math.random()-0.5)*GPSsd;
+    this.pathTrack.setPath([beginPoint,this.currentPosition]);
+    return this.currentPosition;
+  }
+}
+
+
+map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 18,
+    center: {lat: 34.174114, lng: -119.136456},
+    mapTypeId: google.maps.MapTypeId.SATELLITE
+  });
+
+
+
+  //new google.maps.LatLng(
+  //var start={lat: 37.772, lng: -122.214};
+  //var end={lat: 37.772, lng: -122.224};
+  //var distance=google.maps.geometry.spherical.computeDistanceBetween(start,end);
+  //alert(distance);
+
+var track=[];
+track.push([{lat:34.174114,lng:-119.136456},{lat:34.175068,lng:-119.136440},1]);
+track.push([{lat:34.174111,lng:-119.136437},{lat:34.175069,lng: -119.136420},.75]);
+track.push([{lat:34.174111,lng:-119.136418},{lat:34.175066,lng:-119.136403},.9]);
+track.push([{lat:34.174111,lng:-119.136401},{lat:34.175064,lng:-119.136383},1.1]);
+
+
+
+ 
+
+  //flightPath.setMap(map);
+ endTime=60;
+ time=0;
+
+  data=[];
+  var event=function() {
+    time+=5;
+    //alert("time="+time);
+    for (var worker=0;worker<processes.length;worker++) {
+      var datum=processes[worker].update(time,0.001,.00001);
+      datum.worker=worker;
+      datum.time=time;
+      data.push(datum);
+    }
+    //pathTrack.setMap(pathTrack.getMap()? null : map)
+    //pathTrack.setPath([start,newPosition]);
+    //alert("time: "+time+"; position: "+JSON.stringify(newPosition));
+    if (time>=1.5*endTime) {
+      clearInterval(ticker);
+      console.log(JSON.stringify(data));
+    }
+  }
+
+  processes=track.map(function(t) {return new process(t[0],t[1],endTime*t[2])});
+  
+  
+  var setInterval;
+  var startTimer=function() {
+    time=0;
+    ticker=setInterval(event,1000);
+  }
+
+  startTimer();
+
+
+
+
+
+
+
+    </script>
+    <!--<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=&signed_in=true&callback=initMap"></script>-->
+  </body>
+</html>
