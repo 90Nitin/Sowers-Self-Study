@@ -20,12 +20,13 @@ TTD -
 file = open('data_2016-01-06.txt',mode='r')
 json_data = json.load(file)
 json_data = pandas.DataFrame(json_data)
-print(json_data,"\n")
+print(json_data, "\n")
 UnqWorker = list(numpy.unique(json_data['worker']))
 print(type(UnqWorker))
 print(UnqWorker)
 
 for i in UnqWorker:
+    # Note - Variables named as X-Y
     tempLat = json_data['lat'][json_data['worker'] == i]
     tempTime = json_data['time'][json_data['worker'] == i]
     tempLng = json_data['lng'][json_data['worker'] == i]
@@ -34,22 +35,30 @@ for i in UnqWorker:
     modelTLat = sm.OLS(tempLat, tempTime)
     modelTLatEval = modelTLat.fit()
     resultTLat = modelTLatEval.summary()
+    f = open("resultTLat"+"_worker_"+str(i)+".txt", "w")
+    f.write(str(resultTLat))
+    f.close()
 
     # 1.2 Regressing Longitude on time
     modelTLng = sm.OLS(tempLng, tempTime)
     modelTLngEval = modelTLng.fit()
     resultTLng = modelTLngEval.summary()
+    f = open("resultTLng"+"_worker_"+str(i)+".txt", "w")
+    f.write(str(resultTLng))
+    f.close()
 
     # 1a.1 Regressing Lat on Long
     modelLngLat = sm.OLS(tempLat, tempLng)
     modelLngLatEval = modelLngLat.fit()
     resultLngLat = modelLngLatEval.summary()
+    f = open("resultLngLat"+"_worker_"+str(i)+".txt", "w")
+    f.write(str(resultLngLat))
+    f.close()
 
     # 1a.2 Regressing Long on Lat
-    modelTLng = sm.OLS(tempLng, tempTime)
-    modelTLngEval = modelTLng.fit()
-    resultTLng = modelTLngEval.summary()
-
-
-
-
+    modelLatLng = sm.OLS(tempLng, tempLat)
+    modelLatLngEval = modelLatLng.fit()
+    resultLatLng = modelLatLngEval.summary()
+    f = open("resultLatLng"+"_worker_"+str(i)+".txt", "w")
+    f.write(str(resultLatLng))
+    f.close()
